@@ -1,0 +1,148 @@
+---
+title: "Function Practice"
+author: "Grace Lewin"
+date: "8/12/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(palmerpenguins)
+library(tidyverse)
+```
+
+## Basic function structure practice
+
+```{r}
+birddog_sum <- function(bird, dog) {
+  
+  if(bird > 50) {
+    stop("Birds can't be greater than 50!")
+  }
+  
+  if (bird < 10){
+    message("Cool little bird!")
+  }
+  
+  if (dog < 0) {
+    warning("Can a dog be less than 0 pounds?")
+  }
+  
+  add_birddog <- bird + dog
+  return(add_birddog)
+}
+
+bird7_dog600 <- birddog_sum(bird = 7, dog = 600)
+bird7_dog600
+
+birddog_sum(bird = "hawk", dog = 10) # why does this give the error "birds can't be greater than 50?
+
+birddog_sum(bird = 5, dog = -10)
+
+```
+
+```{r}
+say_hello <- function(friend, weekday) {
+  print(paste("Hello", friend, "have a great", weekday))
+}
+
+say_hello(friend = "Teddy", weekday = "Thursday")
+```
+
+### Print vs. return example
+
+```{r}
+find_multiple <- function(a, b) {
+  my_multiplication <- a * b
+  print(my_multiplication)
+}
+
+find_multiple(a = 10, b = 5)
+
+find_multiple(a = 10, b = 6) + 12
+```
+### Functions with Conditions
+```{r}
+animal_age <- function(animal, age) {
+  
+  if (!animal %in% c("dog", "goat")) {
+    warning("Animal must be a dog or a goat")
+  }
+  
+  if (animal =="dog") {
+    creature_age = age * 7
+  }
+  
+  else if (animal == "goat") {
+    creature_age = age * 4.7
+  }
+  
+  return(creature_age)
+  
+}
+
+animal_age(animal = "zebra", age = 10)
+
+
+```
+
+These both return the same thing:
+```{r}
+adelie_gentoo <- penguins %>% 
+  filter(species %in% c("Adelie", "Gentoo"))
+
+adelie_gentoo <- penguins %>% 
+  filter(species == "Adelie" | species == "Gentoo")
+```
+
+This is an example of what NOT to do. It does not return the same thing as above.
+```{r}
+adelie_gentoo_wrong <- penguins %>% 
+  filter(species == c("Adelie", "Gentoo"))
+```
+
+
+### Combine functions and for loops
+
+```{r}
+df_means <- function(df) {
+  for (i in 1:ncol(df)) {
+    col_mean <- mean(df[[i]], na.rm = TRUE) # removes the NAs in the data frame given
+    print(paste("The mean value of", colnames(df[i]), "is", col_mean))
+  }
+}
+
+# colnames(df[i]) will return that column name as a string
+
+# Update this function so that for each iteration, it returns a phrase "The mean value of ____ is _____.
+
+df_means(df = mtcars)
+```
+
+Make a subset of only structural size variables from the penguins dataset for Chinstrap.
+```{r}
+chinstrap_sizes <- penguins %>% 
+  filter(species == "Chinstrap") %>% 
+  select(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+
+df_means(df = chinstrap_sizes)
+
+df_means(penguins)
+
+```
+
+## Condition to check class of an input
+```{r}
+lunchtime <- function(tacos, price_per) {
+  
+  if (is.numeric(tacos) == FALSE) {
+    stop("You must input a number of tacos.")
+  }
+  
+  tot_price <- tacos * price_per
+  return(tot_price)
+}
+
+lunchtime(tacos = "bananas", price_per = 2.50)
+```
+
